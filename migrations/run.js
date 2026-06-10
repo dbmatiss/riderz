@@ -6,7 +6,7 @@ const path = require('path');
 // Migrations utilisent la connexion directe (pas le pooler pgBouncer)
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL_DIRECT || process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  ssl: { rejectUnauthorized: false },
 });
 
 async function run() {
