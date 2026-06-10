@@ -49,9 +49,10 @@ router.post('/', requireAuth, async (req, res) => {
         [first_name, age, city, bio, riding_style, level, looking_for, req.userId]
       );
     } else {
+      // is_active dès la création — la vérification photo (phase 2) gérera is_verified
       await pool.query(
-        `INSERT INTO profiles (user_id, first_name, age, city, bio, riding_style, level, looking_for)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+        `INSERT INTO profiles (user_id, first_name, age, city, bio, riding_style, level, looking_for, is_active)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8, TRUE)`,
         [req.userId, first_name, age, city, bio, riding_style, level, looking_for]
       );
     }

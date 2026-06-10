@@ -21,9 +21,10 @@ router.get('/', requireAuth, async (req, res) => {
       'p.user_id != $1',
       'p.deleted_at IS NULL',
       'p.is_active = TRUE',
-      // Pas de profils sans moto vérifiée
+      // Pas de profils sans moto dans le garage
       'EXISTS (SELECT 1 FROM motorcycles m WHERE m.user_id = p.user_id AND m.deleted_at IS NULL)',
-      'u.is_verified = TRUE',
+      // TODO MVP phase 2: réactiver une fois l'upload photo + vérification en place
+      // 'u.is_verified = TRUE',
       // Exclure déjà likés / passés
       'NOT EXISTS (SELECT 1 FROM likes l WHERE l.liker_id = $1 AND l.liked_id = p.user_id)',
       'NOT EXISTS (SELECT 1 FROM passes ps WHERE ps.passer_id = $1 AND ps.passed_id = p.user_id)',
