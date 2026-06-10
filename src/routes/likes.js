@@ -2,6 +2,7 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const pool = require('../db/pool');
 const { requireAuth } = require('../middleware/auth');
+const { enrichMatch } = require('../services/matchEnrichment');
 
 const router = express.Router();
 
@@ -50,6 +51,10 @@ router.post('/', requireAuth, likeLimiter, async (req, res) => {
     }
 
     await client.query('COMMIT');
+
+    // Score IA + itinéraire générés en arrière-plan, sans bloquer la réponse
+    if (match) enrichMatch(match.id, match.user_a_id, match.user_b_id);
+
     res.status(201).json({ ok: true, match });
   } catch (err) {
     await client.query('ROLLBACK');
